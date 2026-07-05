@@ -1,6 +1,7 @@
 # Blender source — lives locally only, not tracked in git
 plooploo.blend
 plooploo.blend1
+blender-5.1.2-windows-x64/
 
 # Local-only scripts
 generate_daily.py
