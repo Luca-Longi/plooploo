@@ -1,37 +1,13 @@
 {
-  "video_count": 5,
-  "last_frame_end": 10,
-  "last_render": "2026-07-05T20:25:48.269303+00:00",
+  "video_count": 1,
+  "last_frame_end": 2,
+  "last_render": "2026-07-05T21:28:44.108320+00:00",
   "history": [
     {
       "video": 1,
       "frame_start": 1,
       "frame_end": 2,
-      "rendered_at": "2026-07-05T16:18:47.824785+00:00"
-    },
-    {
-      "video": 2,
-      "frame_start": 3,
-      "frame_end": 4,
-      "rendered_at": "2026-07-05T16:47:49.913026+00:00"
-    },
-    {
-      "video": 3,
-      "frame_start": 5,
-      "frame_end": 6,
-      "rendered_at": "2026-07-05T20:10:55.574604+00:00"
-    },
-    {
-      "video": 4,
-      "frame_start": 7,
-      "frame_end": 8,
-      "rendered_at": "2026-07-05T20:19:11.339932+00:00"
-    },
-    {
-      "video": 5,
-      "frame_start": 9,
-      "frame_end": 10,
-      "rendered_at": "2026-07-05T20:25:48.269303+00:00"
+      "rendered_at": "2026-07-05T21:28:44.108320+00:00"
     }
   ]
 }
