@@ -4,7 +4,6 @@ plooploo.blend1
 
 # Local-only scripts
 generate_daily.py
-render_log.json
 
 # OS
 Thumbs.db
