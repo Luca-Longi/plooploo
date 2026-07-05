@@ -1,0 +1,7 @@
+# Blender source — lives locally only, not tracked in git
+plooploo.blend
+plooploo.blend1
+
+# OS
+Thumbs.db
+.DS_Store
