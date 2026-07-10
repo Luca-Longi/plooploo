@@ -61,7 +61,7 @@
 </head>
 <body>
   <img class="logo" src="logo.svg" alt="logo" />
-  <div class="loop-label" id="loop-label">LOOP #</div>
+  <div class="loop-label" id="loop-label"></div>
   <video
     src="assets/daily_loop.webm"
     autoplay
@@ -74,7 +74,7 @@
     fetch('render_log.json')
       .then((res) => res.json())
       .then((data) => {
-        document.getElementById('loop-label').textContent = `LOOP #${data.video_count}`;
+        document.getElementById('loop-label').textContent = `#${data.video_count}`;
       })
       .catch(() => {});
   </script>
