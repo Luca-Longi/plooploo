@@ -1,0 +1,13 @@
+{
+  "video_count": 1,
+  "last_frame_end": 2,
+  "last_render": "2026-07-12T22:58:59.996080+00:00",
+  "history": [
+    {
+      "video": 1,
+      "frame_start": 1,
+      "frame_end": 2,
+      "rendered_at": "2026-07-12T22:58:59.996080+00:00"
+    }
+  ]
+}
