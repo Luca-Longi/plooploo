@@ -62,7 +62,7 @@ except Exception as e:
     sys.exit(1)
 
 # 5. Build presentation text and execute tweet publish step
-post_text = f"Piece #{current_number} of my daily digital art project is live! See today's creation here: https://plooploo.com"
+post_text = f"plooploo #{current_number} new #digitalart everyday. See full animation here: https://plooploo.com"
 
 try:
     response = client_v2.create_tweet(text=post_text, media_ids=[media_id])
