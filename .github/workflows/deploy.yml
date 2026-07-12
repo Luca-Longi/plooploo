@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # change to your default branch name if different
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -26,9 +26,8 @@ jobs:
       - name: Upload static files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # Change this if your site builds into a folder like 'dist' or 'out'
+          path: '.' 
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        

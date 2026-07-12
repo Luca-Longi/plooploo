@@ -9,3 +9,9 @@ generate_daily.py
 # OS
 Thumbs.db
 .DS_Store
+
+#Keys
+secrets.txt
+
+# Python
+__pycache__/
