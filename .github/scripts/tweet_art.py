@@ -62,8 +62,12 @@ except Exception as e:
     sys.exit(1)
 
 # 5. Build presentation text and execute tweet publish step
-post_text = f"plooploo #{current_number} new #digitalart everyday. See full animation here: https://plooploo.com"
-
+post_text = (
+    f"A new 3D loop procedurally generated every single day.\n"
+    f"Today's piece: #{current_number}\n"
+    f"🔗 https://plooploo.com\n\n"
+    f"#proceduralart #everydays #plooploo"
+)
 try:
     response = client_v2.create_tweet(text=post_text, media_ids=[media_id])
     print(f"Successfully posted Piece #{current_number} with its video snapshot card!")
