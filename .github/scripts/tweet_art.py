@@ -1,12 +1,37 @@
 import cv2
 import json
 import os
+import random
 import sys
 import tweepy
 
 JSON_PATH = "render_log.json"
 VIDEO_PATH = "assets/daily_loop.webm"
 TEMP_IMAGE_PATH = "temp_preview.png"
+
+TEXT_VARIATIONS = [
+    "A new 3D loop procedurally generated every single day.",
+    "Another animation is online for today only.",
+    "A new render is ready. No AI, old-fashioned 3D render.",
+    "A new animation loop is ready.",
+    "Fresh daily 3D render dropped!",
+    "New day, new procedural 3D loop.",
+    "Today's procedural loop is live!",
+    "A brand new procedural animation is live.",
+    "Another unique 3D loop procedurally generated today.",
+]
+
+HASHTAG_POOL = [
+    "#proceduralart",
+    "#everydays",
+    "#digitalart",
+    "#generativeart",
+    "#creativecoding",
+    "#3dart",
+    "#3danimation",
+    "#loopinganimation",
+    "#dailyart",
+]
 
 # 1. Parse your JSON configuration
 try:
@@ -62,12 +87,17 @@ except Exception as e:
     sys.exit(1)
 
 # 5. Build presentation text and execute tweet publish step
+intro_text = random.choice(TEXT_VARIATIONS)
+chosen_hashtags = random.sample(HASHTAG_POOL, 2) + ["#plooploo"]
+hashtags_str = " ".join(chosen_hashtags)
+
 post_text = (
-    f"A new 3D loop procedurally generated every single day.\n"
+    f"{intro_text}\n"
     f"Today's piece: #{current_number}\n"
-    f"🔗 https://plooploo.com\n\n"
-    f"#proceduralart #everydays #plooploo"
+    f"🔗 visit plooploo website for the full animation\n\n"
+    f"{hashtags_str}"
 )
+print(f"Generated post text:\n---\n{post_text}\n---")
 try:
     response = client_v2.create_tweet(text=post_text, media_ids=[media_id])
     print(f"Successfully posted Piece #{current_number} with its video snapshot card!")
