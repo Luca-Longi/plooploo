@@ -1,7 +1,7 @@
 {
-  "video_count": 76,
-  "last_frame_end": 9120,
-  "last_render": "2026-09-29T00:23:10.585591+00:00",
+  "video_count": 77,
+  "last_frame_end": 9240,
+  "last_render": "2026-09-30T00:46:51.162110+00:00",
   "history": [
     {
       "video": 1,
@@ -458,6 +458,12 @@
       "frame_start": 9001,
       "frame_end": 9120,
       "rendered_at": "2026-09-29T00:23:10.585591+00:00"
+    },
+    {
+      "video": 77,
+      "frame_start": 9121,
+      "frame_end": 9240,
+      "rendered_at": "2026-09-30T00:46:51.162110+00:00"
     }
   ]
 }
