@@ -1,12 +1,21 @@
 name: Tweet Daily Render
 
 on:
-  push:
-    branches: ["main"]
-    paths: ["assets/daily_loop.webm"]
+  schedule:
+    # Runs at :20 past each hour between 02:00 and 21:00 UTC.
+    # In Central European Time (CET/CEST), this covers all hours from 04:00 to 23:00.
+    # Each daily piece rotates to a different hour across this window to cover different
+    # global timezones, and posts once that day's target hour is reached.
+    - cron: '20 2-21 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force tweet immediately (bypass hour check and duplicate check)'
+        type: boolean
+        default: false
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   tweet:
@@ -14,6 +23,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Initialize Python Environment
         uses: actions/setup-python@v5
@@ -31,4 +42,17 @@ jobs:
           X_CONSUMER_SECRET: ${{ secrets.X_CONSUMER_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-        run: python .github/scripts/tweet_art.py
+          FORCE_TWEET: ${{ github.event.inputs.force }}
+        run: |
+          if [ "$FORCE_TWEET" = "true" ]; then
+            python .github/scripts/tweet_art.py --force
+          else
+            python .github/scripts/tweet_art.py
+          fi
+
+      - name: Commit tweet record to repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add render_log.json
+          git diff --staged --quiet || (git commit -m "chore: record tweet for daily render [skip ci]" && git push origin main)
