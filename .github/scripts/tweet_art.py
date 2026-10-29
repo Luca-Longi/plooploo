@@ -73,12 +73,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Force publishing immediately (bypasses hour check and duplicate check)",
+        help="Publish immediately (bypasses target hour, preserves duplicate protection)",
     )
     parser.add_argument(
         "--schedule",
         action="store_true",
         help="Display the upcoming posting schedule and exit",
+    )
+    parser.add_argument(
+        "--check-only",
+        action="store_true",
+        help="Check eligibility without posting; write should_post to GITHUB_OUTPUT",
     )
     return parser.parse_args()
 
@@ -95,6 +100,9 @@ def print_schedule(current_piece: int) -> None:
 
 def main() -> None:
     args = parse_args()
+    if args.check_only and os.environ.get("GITHUB_OUTPUT"):
+        with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+            output.write("should_post=false\n")
 
     # 1. Parse JSON configuration
     try:
@@ -119,7 +127,7 @@ def main() -> None:
         last_tweeted.get("video") if isinstance(last_tweeted, dict) else last_tweeted
     )
 
-    if not args.force and last_tweeted_video == current_number:
+    if last_tweeted_video == current_number:
         tweeted_at = (
             last_tweeted.get("tweeted_at", "an earlier run")
             if isinstance(last_tweeted, dict)
@@ -148,7 +156,15 @@ def main() -> None:
         f"(Current CET: {now_cet.strftime('%H:%M')}). Proceeding with broadcast."
     )
 
-    # 4. Import heavy third-party dependencies only when posting
+    # 4. Check-only runs never import dependencies or contact X.
+    if args.check_only:
+        print(f"Piece #{current_number} is eligible for posting.")
+        if os.environ.get("GITHUB_OUTPUT"):
+            with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+                output.write("should_post=true\n")
+        return
+
+    # Import heavy third-party dependencies only when posting
     import cv2
     import random
     import tweepy
