@@ -138,22 +138,24 @@ def main() -> None:
         )
         sys.exit(0)
 
-    # 3. Time window check: is it time to post today's piece?
+    # 3. Anchor the target hour to the render date so delayed runs can cross midnight.
     target_hour, target_audience = get_target_hour_cet(current_number)
     now_cet = datetime.now(CET_TZ)
-    current_hour = now_cet.hour
+    rendered_at = datetime.fromisoformat(log_data["last_render"]).astimezone(CET_TZ)
+    target_at = rendered_at.replace(hour=target_hour, minute=0, second=0, microsecond=0)
 
-    if not args.force and current_hour < target_hour:
+    if not args.force and now_cet < target_at:
         print(
-            f"[Schedule Check] Piece #{current_number} is scheduled for {target_hour:02d}:00 CET "
-            f"({target_audience}). Current CET time: {now_cet.strftime('%H:%M')} CET. "
+            f"[Schedule Check] Piece #{current_number} is scheduled for {target_at:%Y-%m-%d %H:%M %Z} "
+            f"({target_audience}). Current time: {now_cet:%Y-%m-%d %H:%M %Z}. "
             f"Waiting for scheduled hour."
         )
         sys.exit(0)
 
     print(
-        f"[Publishing] Target hour ({target_hour:02d}:00 CET — {target_audience}) reached "
-        f"(Current CET: {now_cet.strftime('%H:%M')}). Proceeding with broadcast."
+        f"[Publishing] Piece #{current_number} is due at {target_at:%Y-%m-%d %H:%M %Z} "
+        f"({target_audience}). Current time: {now_cet:%Y-%m-%d %H:%M %Z}. "
+        f"Proceeding with broadcast."
     )
 
     # 4. Check-only runs never import dependencies or contact X.
@@ -248,7 +250,7 @@ def main() -> None:
             "video": current_number,
             "tweeted_at": now_iso,
             "tweet_id": str(tweet_id) if tweet_id else None,
-            "posted_hour_cet": current_hour,
+            "posted_hour_cet": now_cet.hour,
         }
         with open(JSON_PATH, "w") as f:
             json.dump(log_data, f, indent=2)
