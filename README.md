@@ -1,12 +1,13 @@
 # plooploo
 p loop loo
 
-The renderer PC's Windows task `PlooplooXPostingCheck` checks every 30 minutes
-using `.github/scripts/check_x_post.ps1`. It reads the live posting record and
+Configure the renderer PC's Windows task `PlooplooXPostingCheck` to check every
+30 minutes using `.github/scripts/check_x_post.ps1`. It reads the live posting record and
 requests a GitHub Actions run for an unpublished current render. It uses the
 existing GitHub CLI login, so X credentials stay in GitHub secrets.
 The task requires the Windows user to be logged in and the PC awake and online.
 Missed checks resume when the PC is available.
+Use `-CheckOnly` to verify the live state without requesting a publishing run.
 
 GitHub's scheduled checks at :07 and :37 and new-render pushes provide additional
 triggers. All triggers use the same serialized publishing workflow.

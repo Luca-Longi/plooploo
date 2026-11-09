@@ -1,3 +1,5 @@
+param([switch]$CheckOnly)
+
 $ErrorActionPreference = 'Stop'
 $repository = 'Luca-Longi/plooploo'
 $gh = Join-Path $env:ProgramFiles 'GitHub CLI\gh.exe'
@@ -14,5 +16,9 @@ if ([DateTimeOffset]::UtcNow -ge ([DateTimeOffset]::Parse($render.last_render)).
 }
 
 # The workflow enforces the rotating target time, freshness and duplicate checks.
+if ($CheckOnly) {
+    Write-Output "Current piece #$($render.video_count) needs a workflow check."
+    exit 0
+}
 & $gh workflow run tweet.yml --repo $repository --ref main
 exit $LASTEXITCODE
