@@ -6,6 +6,10 @@ on:
     # The script uses rotating Europe/Paris hours (CET/CEST, same as Rome).
     # Delayed runs catch up after the target hour; posted pieces are skipped.
     - cron: '7,37 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - assets/daily_loop.webm
   workflow_dispatch:
     inputs:
       force:
@@ -23,6 +27,7 @@ concurrency:
 jobs:
   tweet:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +39,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      - name: Verify publishing safeguards
+        run: python .github/scripts/test_x_posting.py
 
       - name: Check whether posting is due
         id: check
@@ -67,10 +75,18 @@ jobs:
             python .github/scripts/tweet_art.py
           fi
 
+      - name: Preserve confirmed post receipt
+        if: always() && steps.check.outputs.should_post == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tweet-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tweet_receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Commit tweet record to repository
-        if: steps.check.outputs.should_post == 'true'
+        if: always() && steps.check.outputs.should_post == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add render_log.json
-          git diff --staged --quiet || (git commit -m "chore: record tweet for daily render [skip ci]" && git push origin main)
+          python .github/scripts/save_tweet_record.py

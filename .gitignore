@@ -15,3 +15,5 @@ secrets.txt
 
 # Python
 __pycache__/
+tweet_receipt.json
+temp_preview.png
